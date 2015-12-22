@@ -27,7 +27,7 @@ Or install it yourself as:
   @type parse_postfix
   #key message
   #mask true
-  #use_log_time true
+  #use_log_time false
 </filter>
 ```
 
@@ -61,7 +61,7 @@ see https://github.com/winebarrel/postfix_status_line
 
 ```json
 {
-  "time":1424995358,
+  "time":"Feb 27 09:02:38",
   "hostname":"MyHOSTNAME",
   "process":"postfix/smtp[26490]",
   "queue_id":"5E31727A35D",

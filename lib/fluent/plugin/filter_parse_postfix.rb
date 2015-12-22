@@ -1,5 +1,6 @@
 require 'fluent_plugin_filter_parse_postfix/version'
 require 'postfix_status_line'
+require 'time'
 
 module Fluent
   class ParsePostfixFilter < Filter
@@ -7,7 +8,7 @@ module Fluent
 
     config_param :key,          :string, :default => 'message'
     config_param :mask,         :bool,   :default => true
-    config_param :use_log_time, :bool,   :default => true
+    config_param :use_log_time, :bool,   :default => false
 
     def filter_stream(tag, es)
       result_es = Fluent::MultiEventStream.new
@@ -35,8 +36,8 @@ module Fluent
         return
       end
 
-      if @use_log_time
-        time = parsed['time'] || time
+      if @use_log_time and parsed['time']
+        time = Time.parse(parsed['time']).to_i
       end
 
       result_es.add(time, parsed)

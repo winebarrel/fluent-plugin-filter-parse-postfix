@@ -27,10 +27,14 @@ module Fluent
       line = record[@key]
       return unless line
 
-      line = PostfixStatusLine.parse(line, @mask)
-      return unless line
+      parsed = PostfixStatusLine.parse(line, @mask)
 
-      result_es.add(time, line)
+      unless parsed
+        log.warn "could not parse postfix log: #{line}"
+        return
+      end
+
+      result_es.add(time, parsed)
     end
   end
 end

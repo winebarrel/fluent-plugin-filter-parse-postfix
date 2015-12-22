@@ -5,8 +5,9 @@ module Fluent
   class ParsePostfixFilter < Filter
     Plugin.register_filter('parse_postfix', self)
 
-    config_param :key,  :string, :default => 'message'
-    config_param :mask, :bool,   :default => true
+    config_param :key,          :string, :default => 'message'
+    config_param :mask,         :bool,   :default => true
+    config_param :use_log_time, :bool,   :default => true
 
     def filter_stream(tag, es)
       result_es = Fluent::MultiEventStream.new
@@ -32,6 +33,10 @@ module Fluent
       unless parsed
         log.warn "Could not parse a postfix log: #{line}"
         return
+      end
+
+      if @use_log_time
+        time = parsed['time'] || time
       end
 
       result_es.add(time, parsed)

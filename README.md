@@ -24,7 +24,7 @@ Or install it yourself as:
 
 ```apache
 <filter>
-  type postfix_status_line
+  @type parse_postfix
   #key message
   #mask true
 </filter>

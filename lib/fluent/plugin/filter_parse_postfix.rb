@@ -30,7 +30,7 @@ module Fluent
       parsed = PostfixStatusLine.parse(line, @mask)
 
       unless parsed
-        log.warn "could not parse postfix log: #{line}"
+        log.warn "Could not parse a postfix log: #{line}"
         return
       end
 

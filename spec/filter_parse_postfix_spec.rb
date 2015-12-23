@@ -77,4 +77,20 @@ describe Fluent::ParsePostfixFilter do
       ]
     end
   end
+
+  context 'when expired' do
+    let(:records) do
+      [
+        {"message"=>"May 29 19:21:17 testserver postfix/qmgr[4833]: 9D7FE1D0051: from=<root@test.hogehoge>, status=expired, returned to sender"},
+        {"message"=>"Feb 27 09:02:38 MyHOSTNAME postfix/smtp[26490]: 5E31727A35D: to=<bellsouth@myemail.net>, relay=gateway-f1.isp.att.net[204.127.217.17]:25, delay=0.58, delays=0.11/0.03/0.23/0.20, dsn=2.0.0, status=sent (250 ok ; id=en4req0070M63004172202102)"},
+      ]
+    end
+
+    it do
+      is_expected.to eq [
+        ["test.default", 1432492200, {"time"=>"May 29 19:21:17", "hostname"=>"testserver", "process"=>"postfix/qmgr[4833]", "queue_id"=>"9D7FE1D0051", "from"=>"<****@test.hogehoge>", "status_detail"=>" returned to sender", "status"=>"expired"}],
+        ["test.default", 1432492200, {"time"=>"Feb 27 09:02:38", "hostname"=>"MyHOSTNAME", "process"=>"postfix/smtp[26490]", "queue_id"=>"5E31727A35D", "to"=>"<*********@myemail.net>", "domain"=>"myemail.net",   "relay"=>"gateway-f1.isp.att.net[204.127.217.17]:25", "delay"=>0.58, "delays"=>"0.11/0.03/0.23/0.20", "dsn"=>"2.0.0", "status"=>"sent", "status_detail"=>"(250 ok ; id=en4req0070M63004172202102)"}],
+      ]
+    end
+  end
 end

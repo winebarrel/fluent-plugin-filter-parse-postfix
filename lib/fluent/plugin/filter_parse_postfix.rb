@@ -9,6 +9,8 @@ module Fluent
     config_param :key,          :string, :default => 'message'
     config_param :mask,         :bool,   :default => true
     config_param :use_log_time, :bool,   :default => false
+    config_param :include_hash, :bool,   :default => false
+    config_param :salt,         :string, :default => nil
 
     def filter_stream(tag, es)
       result_es = Fluent::MultiEventStream.new
@@ -29,7 +31,7 @@ module Fluent
       line = record[@key]
       return unless line
 
-      parsed = PostfixStatusLine.parse(line, mask: @mask)
+      parsed = PostfixStatusLine.parse(line,mask: @mask, hash: @include_hash, salt: @salt)
 
       unless parsed
         log.warn "Could not parse a postfix log: #{line}"

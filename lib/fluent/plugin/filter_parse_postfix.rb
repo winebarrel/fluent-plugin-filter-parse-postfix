@@ -20,9 +20,6 @@ module Fluent
       end
 
       result_es
-    rescue => e
-      log.warn e.message
-      log.warn e.backtrace.join(', ')
     end
 
     private
@@ -34,7 +31,7 @@ module Fluent
       parsed = PostfixStatusLine.parse(line,mask: @mask, hash: @include_hash, salt: @salt)
 
       unless parsed
-        log.warn "Could not parse a postfix log: #{line}"
+        log.warn "cannot parse a postfix log: #{line}"
         return
       end
 
@@ -43,6 +40,9 @@ module Fluent
       end
 
       result_es.add(time, parsed)
+    rescue => e
+      log.warn "failed to parse a postfix log: #{line}", :error_class => e.class, :error => e.message
+      log.warn_backtrace
     end
   end
 end

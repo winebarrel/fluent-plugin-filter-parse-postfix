@@ -41,11 +41,24 @@ $ cat fluent.conf
   @type forward
 </source>
 
-<filter>
+<source>
+  @type tail
+  path /var/log/maillog
+  pos_file /var/log/td-agent/postfix-maillog.pos
+  tag postfix.maillog
+  format none
+</source>
+
+<filter postfix.maillog>
+  @type grep
+  regexp1 message status=
+</filter>
+
+<filter postfix.maillog>
   @type parse_postfix
 </filter>
 
-<match **>
+<match postfix.maillog>
   @type stdout
 </match>
 
@@ -53,8 +66,8 @@ $ fluentd -c fluent.conf
 ```
 
 ```sh
-$ echo '{"message":"Feb 27 09:02:38 MyHOSTNAME postfix/smtp[26490]: 5E31727A35D: to=<bellsouth@myemail.net>, relay=gateway-f1.isp.att.net[204.127.217.17]:25, conn_use=2, delay=0.58, delays=0.11/0.03/0.23/0.20, dsn=2.0.0, status=sent (250 ok ; id=en4req0070M63004172202102)"}' | fluent-cat test.test
-#=> 2015-12-22 02:02:22 +0900 test.test: {"time":"Feb 27 09:02:38","hostname":"MyHOSTNAME","process":"postfix/smtp[26490]","queue_id":"5E31727A35D","to":"<*********@myemail.net>","domain":"myemail.net","relay":"gateway-f1.isp.att.net[204.127.217.17]:25","conn_use":2,delay":0.58,"delays":"0.11/0.03/0.23/0.20","dsn":"2.0.0","status":"sent","status_detail":"(250 ok ; id=en4req0070M63004172202102)"}
+$ echo '{"message":"Feb 27 09:02:38 MyHOSTNAME postfix/smtp[26490]: 5E31727A35D: to=<bellsouth@myemail.net>, relay=gateway-f1.isp.att.net[204.127.217.17]:25, conn_use=2, delay=0.58, delays=0.11/0.03/0.23/0.20, dsn=2.0.0, status=sent (250 ok ; id=en4req0070M63004172202102)"}' | fluent-cat postfix.maillog
+#=> 2015-12-22 02:02:22 +0900 postfix.maillog: {"time":"Feb 27 09:02:38","hostname":"MyHOSTNAME","process":"postfix/smtp[26490]","queue_id":"5E31727A35D","to":"<*********@myemail.net>","domain":"myemail.net","relay":"gateway-f1.isp.att.net[204.127.217.17]:25","conn_use":2,delay":0.58,"delays":"0.11/0.03/0.23/0.20","dsn":"2.0.0","status":"sent","status_detail":"(250 ok ; id=en4req0070M63004172202102)"}
 ```
 
 ## Output

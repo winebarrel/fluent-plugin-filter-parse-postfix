@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'fluentd', '>= 0.12'
-  spec.add_dependency 'postfix_status_line', '~> 0.2.1'
+  spec.add_dependency 'postfix_status_line', '~> 0.2.2'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'

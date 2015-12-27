@@ -28,15 +28,17 @@ module Fluent
       line = record[@key]
       return unless line
 
-      parsed = PostfixStatusLine.parse(line,mask: @mask, hash: @include_hash, salt: @salt)
+      parsed = PostfixStatusLine.parse(
+        line,
+        mask: @mask, hash: @include_hash, salt: @salt, parse_time: @use_log_time)
 
       unless parsed
         log.warn "cannot parse a postfix log: #{line}"
         return
       end
 
-      if @use_log_time and parsed['time']
-        time = Time.parse(parsed['time']).to_i
+      if @use_log_time and parsed['epoch']
+        time = parsed.delete('epoch')
       end
 
       result_es.add(time, parsed)

@@ -30,6 +30,7 @@ Or install it yourself as:
   #use_log_time false
   #include_hash false
   #salt my_salt
+  #sha_algorithm 512
 </filter>
 ```
 

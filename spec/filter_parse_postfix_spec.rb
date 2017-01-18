@@ -3,6 +3,7 @@ describe Fluent::ParsePostfixFilter do
   let(:driver) { create_driver(fluentd_conf) }
   let(:today) { Time.parse('2015/05/24 18:30 UTC') }
   let(:time) { today.to_i }
+  let!(:parsed_time) { Time.parse('02/27 09:02:37 +0000').to_i }
 
   let(:records) do
     [
@@ -13,6 +14,10 @@ describe Fluent::ParsePostfixFilter do
 
   before do
     Timecop.freeze(today)
+  end
+
+  after do
+    Timecop.return
   end
 
   subject do
@@ -40,8 +45,8 @@ describe Fluent::ParsePostfixFilter do
 
     it do
       is_expected.to match_array [
-        ["test.default", 1425027757, {"time"=>"Feb 27 09:02:37", "hostname"=>"MyHOSTNAME", "process"=>"postfix/smtp[26490]", "queue_id"=>"D53A72713E5", "to"=>"*******@bellsouth.net", "domain"=>"bellsouth.net", "relay"=>"gateway-f1.isp.att.net[204.127.217.16]:25", "conn_use"=>2, "delay"=>0.57, "delays"=>"0.11/0.03/0.23/0.19", "dsn"=>"2.0.0", "status"=>"sent", "status_detail"=>"(250 ok ; id=20120227140036M0700qer4ne)"}],
-        ["test.default", 1425027758, {"time"=>"Feb 27 09:02:38", "hostname"=>"MyHOSTNAME", "process"=>"postfix/smtp[26490]", "queue_id"=>"5E31727A35D", "to"=>"*********@myemail.net", "domain"=>"myemail.net",   "relay"=>"gateway-f1.isp.att.net[204.127.217.17]:25", "conn_use"=>3, "delay"=>0.58, "delays"=>"0.11/0.03/0.23/0.20", "dsn"=>"2.0.0", "status"=>"sent", "status_detail"=>"(250 ok ; id=en4req0070M63004172202102)"}],
+        ["test.default", parsed_time    , {"time"=>"Feb 27 09:02:37", "hostname"=>"MyHOSTNAME", "process"=>"postfix/smtp[26490]", "queue_id"=>"D53A72713E5", "to"=>"*******@bellsouth.net", "domain"=>"bellsouth.net", "relay"=>"gateway-f1.isp.att.net[204.127.217.16]:25", "conn_use"=>2, "delay"=>0.57, "delays"=>"0.11/0.03/0.23/0.19", "dsn"=>"2.0.0", "status"=>"sent", "status_detail"=>"(250 ok ; id=20120227140036M0700qer4ne)"}],
+        ["test.default", parsed_time + 1, {"time"=>"Feb 27 09:02:38", "hostname"=>"MyHOSTNAME", "process"=>"postfix/smtp[26490]", "queue_id"=>"5E31727A35D", "to"=>"*********@myemail.net", "domain"=>"myemail.net",   "relay"=>"gateway-f1.isp.att.net[204.127.217.17]:25", "conn_use"=>3, "delay"=>0.58, "delays"=>"0.11/0.03/0.23/0.20", "dsn"=>"2.0.0", "status"=>"sent", "status_detail"=>"(250 ok ; id=en4req0070M63004172202102)"}],
       ]
     end
   end

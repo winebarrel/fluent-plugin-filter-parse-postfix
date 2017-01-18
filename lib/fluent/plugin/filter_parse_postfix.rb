@@ -6,11 +6,12 @@ module Fluent
   class ParsePostfixFilter < Filter
     Plugin.register_filter('parse_postfix', self)
 
-    config_param :key,          :string, :default => 'message'
-    config_param :mask,         :bool,   :default => true
-    config_param :use_log_time, :bool,   :default => false
-    config_param :include_hash, :bool,   :default => false
-    config_param :salt,         :string, :default => nil
+    config_param :key,           :string,  :default => 'message'
+    config_param :mask,          :bool,    :default => true
+    config_param :use_log_time,  :bool,    :default => false
+    config_param :include_hash,  :bool,    :default => false
+    config_param :salt,          :string,  :default => nil
+    config_param :sha_algorithm, :integer, :default => nil
 
     def filter_stream(tag, es)
       result_es = Fluent::MultiEventStream.new
@@ -30,7 +31,7 @@ module Fluent
 
       parsed = PostfixStatusLine.parse(
         line,
-        mask: @mask, hash: @include_hash, salt: @salt, parse_time: @use_log_time)
+        mask: @mask, hash: @include_hash, salt: @salt, parse_time: @use_log_time, sha_algorithm: @sha_algorithm)
 
       unless parsed
         log.warn "cannot parse a postfix log: #{line}"

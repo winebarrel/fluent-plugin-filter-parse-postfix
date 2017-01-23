@@ -119,8 +119,8 @@ describe Fluent::ParsePostfixFilter do
 
     it do
       is_expected.to match_array [
-        ["test.default", 1432492200, {"time"=>"Feb 27 09:02:37", "hostname"=>"MyHOSTNAME", "process"=>"postfix/smtp[26490]", "queue_id"=>"D53A72713E5", "hash"=>"1657d867bcc57c7858fd5ced871e6aec9883fd81", "to"=>"*******@bellsouth.net", "domain"=>"bellsouth.net", "relay"=>"gateway-f1.isp.att.net[204.127.217.16]:25", "conn_use"=>2, "delay"=>0.57, "delays"=>"0.11/0.03/0.23/0.19", "dsn"=>"2.0.0", "status_detail"=>"(250 ok ; id=20120227140036M0700qer4ne)", "status"=>"sent"}],
-        ["test.default", 1432492200, {"time"=>"Feb 27 09:02:38", "hostname"=>"MyHOSTNAME", "process"=>"postfix/smtp[26490]", "queue_id"=>"5E31727A35D", "hash"=>"185943856d6a6ef6cddeb1b10d56a1a31d800eae", "to"=>"*********@myemail.net", "domain"=>"myemail.net", "relay"=>"gateway-f1.isp.att.net[204.127.217.17]:25", "conn_use"=>3, "delay"=>0.58, "delays"=>"0.11/0.03/0.23/0.20", "dsn"=>"2.0.0", "status_detail"=>"(250 ok ; id=en4req0070M63004172202102)", "status"=>"sent"}],
+        ["test.default", 1432492200, {"time"=>"Feb 27 09:02:37", "hostname"=>"MyHOSTNAME", "process"=>"postfix/smtp[26490]", "queue_id"=>"D53A72713E5", "hash"=>"86c53c0fc7e7f7d4b68e319d565611cc6c2c5b5b", "to"=>"*******@bellsouth.net", "domain"=>"bellsouth.net", "relay"=>"gateway-f1.isp.att.net[204.127.217.16]:25", "conn_use"=>2, "delay"=>0.57, "delays"=>"0.11/0.03/0.23/0.19", "dsn"=>"2.0.0", "status_detail"=>"(250 ok ; id=20120227140036M0700qer4ne)", "status"=>"sent"}],
+        ["test.default", 1432492200, {"time"=>"Feb 27 09:02:38", "hostname"=>"MyHOSTNAME", "process"=>"postfix/smtp[26490]", "queue_id"=>"5E31727A35D", "hash"=>"d31a27746e3f9f1a59fd6eba9e28bb7540ec07a3", "to"=>"*********@myemail.net", "domain"=>"myemail.net", "relay"=>"gateway-f1.isp.att.net[204.127.217.17]:25", "conn_use"=>3, "delay"=>0.58, "delays"=>"0.11/0.03/0.23/0.20", "dsn"=>"2.0.0", "status_detail"=>"(250 ok ; id=en4req0070M63004172202102)", "status"=>"sent"}],
       ]
     end
   end

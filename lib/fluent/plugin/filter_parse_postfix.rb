@@ -6,46 +6,40 @@ module Fluent
   class ParsePostfixFilter < Filter
     Plugin.register_filter('parse_postfix', self)
 
-    config_param :key,           :string,  :default => 'message'
-    config_param :mask,          :bool,    :default => true
-    config_param :use_log_time,  :bool,    :default => false
-    config_param :include_hash,  :bool,    :default => false
-    config_param :salt,          :string,  :default => nil
-    config_param :sha_algorithm, :integer, :default => nil
+    config_param :key,                   :string,  :default => 'message'
+    config_param :mask,                  :bool,    :default => true
+    config_param :use_log_time ,         :bool,    :default => false
+    config_param :include_hash,          :bool,    :default => false
+    config_param :salt,                  :string,  :default => nil
+    config_param :sha_algorithm,         :integer, :default => nil
+    config_param :header_checks_warning, :bool,    :default => false
 
-    def filter_stream(tag, es)
-      result_es = Fluent::MultiEventStream.new
-
-      es.each do |time, record|
-        parse_postfix(time, record, result_es)
-      end
-
-      result_es
-    end
-
-    private
-
-    def parse_postfix(time, record, result_es)
+    def filter(tag, time, record)
       line = record[@key]
-      return unless line
+      return record unless line
 
-      parsed = PostfixStatusLine.parse(
-        line,
-        mask: @mask, hash: @include_hash, salt: @salt, parse_time: @use_log_time, sha_algorithm: @sha_algorithm)
+      options = {mask: @mask, hash: @include_hash, salt: @salt, parse_time: @use_log_time, sha_algorithm: @sha_algorithm}
+
+      if @header_checks_warning
+        parsed = PostfixStatusLine.parse_header_checks_warning(line, options)
+      else
+        parsed = PostfixStatusLine.parse(line, options)
+      end
 
       unless parsed
         log.warn "cannot parse a postfix log: #{line}"
-        return
+        return record
       end
 
       if @use_log_time and parsed['epoch']
         time = parsed.delete('epoch')
       end
 
-      result_es.add(time, parsed)
+      parsed
     rescue => e
       log.warn "failed to parse a postfix log: #{line}", :error_class => e.class, :error => e.message
       log.warn_backtrace
+      record
     end
   end
 end

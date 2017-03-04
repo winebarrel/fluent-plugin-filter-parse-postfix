@@ -31,6 +31,7 @@ Or install it yourself as:
   #include_hash false
   #salt my_salt
   #sha_algorithm 512 # 1, 224, 256, 384, 512 (default)
+  #header_checks_warning false
 </filter>
 ```
 
@@ -91,4 +92,35 @@ see https://github.com/winebarrel/postfix_status_line
   "status":"sent",
   "status_detail":"(250 ok ; id=en4req0070M63004172202102)"
 }
+```
+
+### Parse Header Checks Warning
+
+```sh
+$ cat fluent.conf
+...
+<filter postfix.maillog>
+  @type grep
+  regexp1 message warning: header
+</filter>
+
+<filter postfix.maillog>
+  @type parse_postfix
+  header_checks_warning true
+</filter>
+...
+
+$ fluentd -c fluent.conf
+```
+
+```sh
+$ echo '{"message":"Mar  4 14:44:19 P788 postfix/cleanup[7426]: E80A9DF6F7E: warning: header Subject: test from local; from=<sugawara@P788.local> to=<sgwr_dts@yahoo.co.jp>"}' | fluent-cat postfix.maillog
+#=> 2017-03-04 18:26:46.146399000 +0900 postfix.maillog: {
+#     "time":"Mar  4 14:44:19","hostname":"P788",
+#     "process":"postfix/cleanup[7426]",
+#     "queue_id":"E80A9DF6F7E",
+#     "to":"********@yahoo.co.jp",
+#     "domain":"yahoo.co.jp",
+#     "from":"********@P788.local",
+#     "Subject":"test from local;"}
 ```

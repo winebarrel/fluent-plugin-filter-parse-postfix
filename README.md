@@ -31,7 +31,7 @@ Or install it yourself as:
   #include_hash false
   #salt my_salt
   #sha_algorithm 512 # 1, 224, 256, 384, 512 (default)
-  #header_checks_warning false
+  #parse_header_checks false
 </filter>
 ```
 
@@ -94,7 +94,7 @@ see https://github.com/winebarrel/postfix_status_line
 }
 ```
 
-### Parse [header_checks](http://www.postfix.org/header_checks.5.html) warning
+### Parse [header_checks](http://www.postfix.org/header_checks.5.html)
 
 ```sh
 $ cat fluent.conf
@@ -106,7 +106,7 @@ $ cat fluent.conf
 
 <filter postfix.maillog>
   @type parse_postfix
-  header_checks_warning true
+  parse_header_checks true
 </filter>
 ...
 
@@ -122,5 +122,7 @@ $ echo '{"message":"Mar  4 14:44:19 P788 postfix/cleanup[7426]: E80A9DF6F7E: war
 #     "to":"********@yahoo.co.jp",
 #     "domain":"yahoo.co.jp",
 #     "from":"********@P788.local",
-#     "Subject":"test from local;"}
+#     "header_from":"local",
+#     "priority":"warning",
+#     "Subject":"test"}
 ```

@@ -6,13 +6,13 @@ module Fluent
   class ParsePostfixFilter < Filter
     Plugin.register_filter('parse_postfix', self)
 
-    config_param :key,                   :string,  :default => 'message'
-    config_param :mask,                  :bool,    :default => true
-    config_param :use_log_time ,         :bool,    :default => false
-    config_param :include_hash,          :bool,    :default => false
-    config_param :salt,                  :string,  :default => nil
-    config_param :sha_algorithm,         :integer, :default => nil
-    config_param :header_checks_warning, :bool,    :default => false
+    config_param :key,                 :string,  :default => 'message'
+    config_param :mask,                :bool,    :default => true
+    config_param :use_log_time ,       :bool,    :default => false
+    config_param :include_hash,        :bool,    :default => false
+    config_param :salt,                :string,  :default => nil
+    config_param :sha_algorithm,       :integer, :default => nil
+    config_param :parse_header_checks, :bool,    :default => false
 
     def filter(tag, time, record)
       line = record[@key]
@@ -20,8 +20,8 @@ module Fluent
 
       options = {mask: @mask, hash: @include_hash, salt: @salt, parse_time: @use_log_time, sha_algorithm: @sha_algorithm}
 
-      if @header_checks_warning
-        parsed = PostfixStatusLine.parse_header_checks_warning(line, options)
+      if @parse_header_checks
+        parsed = PostfixStatusLine.parse_header_checks(line, options)
       else
         parsed = PostfixStatusLine.parse(line, options)
       end

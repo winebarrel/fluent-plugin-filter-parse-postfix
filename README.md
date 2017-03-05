@@ -94,7 +94,7 @@ see https://github.com/winebarrel/postfix_status_line
 }
 ```
 
-### Parse Header Checks Warning
+### Parse [header_checks](http://www.postfix.org/header_checks.5.html) warning
 
 ```sh
 $ cat fluent.conf

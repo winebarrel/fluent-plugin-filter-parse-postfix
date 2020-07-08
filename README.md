@@ -116,7 +116,8 @@ $ fluentd -c fluent.conf
 ```sh
 $ echo '{"message":"Mar  4 14:44:19 P788 postfix/cleanup[7426]: E80A9DF6F7E: warning: header Subject: test from local; from=<sugawara@P788.local> to=<sgwr_dts@yahoo.co.jp>"}' | fluent-cat postfix.maillog
 #=> 2017-03-04 18:26:46.146399000 +0900 postfix.maillog: {
-#     "time":"Mar  4 14:44:19","hostname":"P788",
+#     "time":"Mar  4 14:44:19",
+#     "hostname":"P788",
 #     "process":"postfix/cleanup[7426]",
 #     "queue_id":"E80A9DF6F7E",
 #     "to":"********@yahoo.co.jp",
